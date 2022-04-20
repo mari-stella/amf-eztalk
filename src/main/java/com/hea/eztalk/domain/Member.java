@@ -24,7 +24,7 @@ public class Member {
 
     public boolean check가입여부(){
 
-        Repository repository = MemberApplication.getApplicationContext().getBean(Repository.class); //주입받기
+        MemberRepository repository = MemberApplication.getApplicationContext().getBean(MemberRepository.class); //주입받기
         Optional<Member> chk_mem = repository.findByMemberId(memberId); 
         
         if(chk_mem.isPresent()){

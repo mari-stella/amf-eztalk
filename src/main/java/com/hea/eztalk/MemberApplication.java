@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.hea.eztalk.domain.Level;
 import com.hea.eztalk.domain.Member;
-import com.hea.eztalk.domain.Repository;
+import com.hea.eztalk.domain.MemberRepository;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +20,7 @@ public class MemberApplication {
 
 	public static void main(String[] args) {
 		applicationContext = SpringApplication.run(MemberApplication.class, args);
-		Repository repository = applicationContext.getBean(Repository.class);
+		MemberRepository repository = applicationContext.getBean(MemberRepository.class);
 
 
 		//회원가입
