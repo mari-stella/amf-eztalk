@@ -1,4 +1,4 @@
-# 시작하기
+# 시작하기 AMP-EZTALK
 
 ## Base Project 다운로드 및 실행
 먼저, 새로운 브라우저 탭을 열고, base project 를 gitpod 로 접속합니다
