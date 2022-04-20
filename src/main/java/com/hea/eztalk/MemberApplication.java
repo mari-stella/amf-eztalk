@@ -32,6 +32,7 @@ public class MemberApplication {
 		member.setRecentActivityDate(new Date()); 
 		repository.save(member); 
 
+		System.out.println("가입하셨습니다.");
 		//중복오류발생용 동일가입 시도		 
 
 		//중복가입체크
