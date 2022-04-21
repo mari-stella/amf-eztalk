@@ -17,10 +17,13 @@ mvn spring-boot:run
 - maria db 를 이용하여 연결:
 - maria db server 를 기동하기 (docker)
 ```
- docker run  -d -p 3306:3306 -e MARIADB_ROOT_PASSWORD=admin  mariadb:latest 
+ docker run --name maria -d -p 3306:3306 -e MARIADB_ROOT_PASSWORD=admin  mariadb:latest 
 ```
+e4d5a9f8c01564e1607dfed70714f9eb3985e1d0c3db69a4612e9b20489714b2
 - 접속 및 DB 생성
 ```
+> docker exec -it maria  /bin/bash
+
 root@251ce07fd6fc:/# mysql --user=root --password=$MARIADB_ROOT_PASSWORD
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MariaDB connection id is 4
@@ -32,8 +35,7 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 MariaDB [(none)]> 
 MariaDB [(none)]> 
-MariaDB [(none)]> create database petstore
-    -> ;
+MariaDB [(none)]> create database eztalk;
 Query OK, 1 row affected (0.000 sec)
 
 MariaDB [(none)]> 
@@ -53,35 +55,35 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL57Dialect
   datasource:
-    url: jdbc:mysql://localhost:3306/petstore
+    url: jdbc:mysql://localhost:3306/eztalk
     username: root
     password: admin
     driverClassName: com.mysql.cj.jdbc.Driver
 ```
 - 데이터 확인
 ```
-MariaDB [(none)]> use petstore
+MariaDB [(none)]> use eztalk
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
 
 Database changed
-MariaDB [petstore]> show tables;
+MariaDB [eztalk]> show tables;
 +--------------------+
-| Tables_in_petstore |
+| Tables_in_eztalk   |
 +--------------------+
-| Pet                |
+| Member             |
 | hibernate_sequence |
 +--------------------+
 2 rows in set (0.000 sec)
 
-MariaDB [petstore]> 
-MariaDB [petstore]> 
-MariaDB [petstore]> select * from Pet;
-+----------+----+------------+--------+------+
-| pet_type | id | appearance | energy | name |
-+----------+----+------------+--------+------+
-| dog      |  1 |          0 |      3 | ??   |
-+----------+----+------------+--------+------+
+MariaDB [eztalk]> 
+MariaDB [eztalk]> 
+MariaDB [eztalk]> select * from Member;
++----+--------+-------+----------+------+----------------------------+
+| id | active | level | memberId | name | recentActivityDate         |
++----+--------+-------+----------+------+----------------------------+
+|  1 |        |     0 | qwerty   | ???  | 2022-04-21 01:10:25.000000 |
++----+--------+-------+----------+------+----------------------------+
 1 row in set (0.000 sec)
 
 ```
