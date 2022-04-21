@@ -17,7 +17,7 @@ mvn spring-boot:run
 - maria db 를 이용하여 연결:
 - maria db server 를 기동하기 (docker)
 ```
- docker run --name maria -d -p 3306:3306 -e MARIADB_ROOT_PASSWORD=admin  mariadb:latest 
+docker run --name maria -d -p 3306:3306 -e MARIADB_ROOT_PASSWORD=admin  mariadb:latest 
 ```
 e4d5a9f8c01564e1607dfed70714f9eb3985e1d0c3db69a4612e9b20489714b2
 - 접속 및 DB 생성

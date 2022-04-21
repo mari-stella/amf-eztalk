@@ -5,10 +5,17 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Address {
     
-	String aptName;
+	String aptName;    
+    String zipcode;
 	String dong;
     String ho;
     
+    public String getZipcode() {
+        return zipcode;
+    }
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
     public String getAptName() {
         return aptName;
     }
