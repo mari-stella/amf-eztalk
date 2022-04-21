@@ -1,6 +1,7 @@
 package com.hea.eztalk.domain;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.*;
@@ -11,13 +12,18 @@ import com.hea.eztalk.MemberApplication;
 @Entity
 public class Member {
 
-    static long TEN_DAYS = (1000*60*60*24*10) ;
-    
+
     String memberId;
     String name;
     Level level;
     boolean active;
     Date recentActivityDate;
+
+    @Embedded
+    Address address;
+
+    @OneToMany
+    List<Community> joinCommunityList;
 
     @Id @GeneratedValue
     Long id;
@@ -35,24 +41,28 @@ public class Member {
         }
 
     }
+ 
+	public void save(){
+		MemberRepository repository = MemberApplication.getApplicationContext().getBean(MemberRepository.class);
+		repository.save(this);
+	}
 
- //   http :8080/members
 
-
-    public boolean check잠수(){ // 장기미접속자 처리용으루 쓰면 될듯
-        Date today = new Date();
-        if(today.before( new Date(getRecentActivityDate().getTime()+TEN_DAYS) ) ){
-            return false;
-        }
-        else {
-            return true;
-        }
+    public List<Community> getJoinCommunityList() {
+        return joinCommunityList;
     }
 
-    public String getName() {
-        return name;
+    public void setJoinCommunityList(List<Community> joinCommunityList) {
+        this.joinCommunityList = joinCommunityList;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public String getMemberId() {
         return memberId;
@@ -61,6 +71,11 @@ public class Member {
 
     public void setMemberId(String memberId) {
         this.memberId = memberId;
+    }
+
+
+    public String getName() {
+        return name;
     }
 
 
@@ -101,4 +116,17 @@ public class Member {
         this.id = id;
     }
 
+    // static long TEN_DAYS = (1000*60*60*24*10) ;
+ //   http :8080/members
+
+
+    // public boolean check잠수(){ // 장기미접속자 처리용으루 쓰면 될듯
+    //     Date today = new Date();
+    //     if(today.before( new Date(getRecentActivityDate().getTime()+TEN_DAYS) ) ){
+    //         return false;
+    //     }
+    //     else {
+    //         return true;
+    //     }
+    // }
 }

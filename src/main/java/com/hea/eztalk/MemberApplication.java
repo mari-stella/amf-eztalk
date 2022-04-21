@@ -30,7 +30,7 @@ public class MemberApplication {
 		member.setName("박연주");
 		member.setLevel(Level.준회원);
 		member.setRecentActivityDate(new Date()); 
-		repository.save(member); 
+		member.save();
 
 		System.out.println("가입하셨습니다.");
 		//중복오류발생용 동일가입 시도		 

@@ -22,7 +22,7 @@ mvn spring-boot:run
 e4d5a9f8c01564e1607dfed70714f9eb3985e1d0c3db69a4612e9b20489714b2
 - 접속 및 DB 생성
 ```
-> docker exec -it maria  /bin/bash
+> docker exec -it maria /bin/bash
 
 root@251ce07fd6fc:/# mysql --user=root --password=$MARIADB_ROOT_PASSWORD
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
@@ -31,7 +31,8 @@ Server version: 10.7.3-MariaDB-1:10.7.3+maria~focal mariadb.org binary distribut
 
 Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+Type 'help;' or '\h' for help. 
+Type '\c' to clear the current input statement.
 
 MariaDB [(none)]> 
 MariaDB [(none)]> 
