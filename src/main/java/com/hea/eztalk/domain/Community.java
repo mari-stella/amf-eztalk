@@ -2,8 +2,6 @@ package com.hea.eztalk.domain;
 
 import javax.persistence.Entity;
 
-
-@Entity
 public class Community {
 
     //가입된 커뮤니티 목록용..

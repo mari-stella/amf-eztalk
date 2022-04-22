@@ -83,7 +83,7 @@ public class Member {
     } 
 
     // 5. 등록된 이메일로 인증메일 자동 발송   
-    @PostPersist
+    @PostPersist //insert method가 호출된 이후
     public void requestEmailCredential(){
 
         EmailCertificationRequested emailCertificationRequested = new EmailCertificationRequested();
@@ -117,8 +117,6 @@ public class Member {
         // 2차인증 요청 -> 커뮤니티 ( 이부분은 어떻게 구현할지? ~_~ 일단킵~)
         secondaryCredentialEntered.publish();
     }
-
-
 
 
     public String getId() {
