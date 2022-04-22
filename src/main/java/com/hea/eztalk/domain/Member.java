@@ -15,6 +15,7 @@ public class Member {
     String id; // 사용자계정
     String name; // 사용자명
     String email; // 이메일
+
     @Embedded
     Address address; // 주소 (아파트명,우편번호,동,호수)
 
@@ -161,6 +162,7 @@ public class Member {
     public void setAddress(Address address) {
         this.address = address;
     }
+    
     public List<Community> getJoinCommunityList() {
         return joinCommunityList;
     }

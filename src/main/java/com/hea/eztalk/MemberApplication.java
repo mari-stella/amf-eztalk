@@ -30,6 +30,14 @@ public class MemberApplication {
 		//회원가입 ui...
 		Member member =new Member();
 
+		
+		member.setId("qwerty"); 
+		member.setName("박연주");
+		member.setEmail("qwerty@naver.com");
+
+		// 2. 메일중복체크
+		if(!member.duplicateEmailCheck())	System.out.println("가입실패. 이메일주소가 중복됩니다.");
+		
 		Address address = new Address();
 		address.setAptName("대우아파트");
 		address.setZipcode("12345");
@@ -39,13 +47,6 @@ public class MemberApplication {
 		
 		// 1. 기존 가입여부 확인
 		if(!member.duplicateMemberCheck())	System.out.println("가입실패. 동일주소가 가입되어있습니다.");
-		
-		member.setId("qwerty"); 
-		member.setName("박연주");
-		member.setEmail("qwerty@naver.com");
-
-		// 2. 메일중복체크
-		if(!member.duplicateEmailCheck())	System.out.println("가입실패. 이메일주소가 중복됩니다.");
 
 		// 3. 회원가입
 		member.joinMember(); 
