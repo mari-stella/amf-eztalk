@@ -30,47 +30,40 @@ public class MemberApplication {
 		//회원가입 ui...
 		Member member =new Member();
 
-		member.setId("qwerty"); 
-		member.setName("박연주");
-		member.setEmail("qwerty@naver.com");
-
 		Address address = new Address();
 		address.setAptName("대우아파트");
 		address.setZipcode("12345");
 		address.setDong("101");
 		address.setHo("102");		
-		member.setAddress(address);
-		// member.setAddress(new Address("대우아파트","16868","206","702"));
-		member.setLevel(Level.준회원);
-		member.setActive(Active.이메일인증필요);
+		member.setAddress(address); 
+		
+		// 1. 기존 가입여부 확인
+		if(!member.duplicateMemberCheck())	System.out.println("가입실패. 동일주소가 가입되어있습니다.");
+		
+		member.setId("qwerty"); 
+		member.setName("박연주");
+		member.setEmail("qwerty@naver.com");
 
-		int result = member.joinMember();
+		// 2. 메일중복체크
+		if(!member.duplicateEmailCheck())	System.out.println("가입실패. 이메일주소가 중복됩니다.");
 
-		if(result==0)  System.out.println("회원가입되었습니다.");
-		else if(result==1)  System.out.println("가입실패. 동일주소가 가입되어있습니다.");
-		else if(result==2) System.out.println("가입실패. 이메일주소가 중복됩니다.");
+		// 3. 회원가입
+		member.joinMember(); 
 			
-		// Member talent = new Member();
-		// talent.setRecentActivityDate(new Date());
-		// talent.setLevel(Level.정회원);
-
-		// repository.save(talent);
-
-		// System.out.println(talent.check잠수() == false);
 	}
 
 
 
-	@Autowired
-	MemberRepository memberRepository;
+	// @Autowired
+	// MemberRepository memberRepository;
 	
-	@RequestMapping(method=RequestMethod.PUT, path="/members/{id}/mailAuth")
-	public void join(@PathVariable("id") String id){
-		memberRepository.findById(id).ifPresent(member ->{
-			member.emailAuth();
-			member.save();
-		});
-	}
+	// @RequestMapping(method=RequestMethod.PUT, path="/members/{id}/mailAuth")
+	// public void join(@PathVariable("id") String id){
+	// 	memberRepository.findById(id).ifPresent(member ->{
+	// 		member.emailAuth();
+	// 		member.save();
+	// 	});
+	// }
 
 
 }

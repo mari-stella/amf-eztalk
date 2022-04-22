@@ -2,109 +2,124 @@ package com.hea.eztalk.domain;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.Optional; 
 import javax.persistence.*;
-
 import com.hea.eztalk.MemberApplication;
- 
+
 
 @Entity
 public class Member {
 
- 
+    
     @Id
-    String id;
-    String name;
-    String email;
-    Level level;
-    Active active; 
-    Date recentActivityDate;
-
+    String id; // 사용자계정
+    String name; // 사용자명
+    String email; // 이메일
     @Embedded
-    Address address;
+    Address address; // 주소 (아파트명,우편번호,동,호수)
+
+    Level level; // 준회원, 정회원
+    Active active;  // 이메일인증필요, 이메일인증요청상태, 이메일인증완료
 
     @OneToMany
-    List<Community> joinCommunityList;
+    List<Community> joinCommunityList; // 가입된 커뮤니티 목록 조회용
 
-    public int joinMember(){ //회원가입
+    Date recentActivityDate; // 최근접속일자
+ 
 
-        if(check가입여부()){ 
-            if(check이메일()){
-                save();
-                return 0;
-            }
-            else{
-                System.out.println("오류2 : 동일 이메일 주소 존재함");
-                return 2;
-            }
+    // 회원가입 절차 
+    // 1. 중복가입여부(주소) 확인
+    // 2. 이메일 중복 체크
+    // 3. 회원정보 입력
+    // 4. 회원가입
+    // 5. 등록된 이메일로 인증메일 자동 발송
+
+
+
+    // 1. 중복가입여부(주소) 확인
+    public boolean duplicateMemberCheck(){
+        MemberRepository repository = MemberApplication.getApplicationContext().getBean(MemberRepository.class); //주입받기 
+        Optional<Member> chk_addr = repository.findByAddress(address); 
+
+        // 주소 중복체크
+        if(chk_addr.isPresent()){
+            // 가입된 주소가 있음
+            return false;
         }
-        else{
-            //기존 가입내역 있음
-            System.out.println("오류1 :  동일 주소로 가입됨");
-            return 1;
-        }
-    }
-
-    // 이메일 인증요청
-    public void requestEmailAuth(){
-
-        if(check이메일()==true){
-            // 중복이메일 아니므로 인증메일 발송
-            setActive(active.인증요청);
-            System.out.println("인증메일을 발송했습니다. 메일을 확인해주세요.");
-        }
-        else{
-            // 가입된 이메일 주소 있음. 발송안함
-            System.out.println("이미 인증된 메일 주소입니다.");
+        else{ 
+            // 가입된 주소가 없으므로 통과~
+            return true;
         }
 
     }
-
-    public void emailAuth() {
-
-    }
-
-
-
-    // 이메일 중복체크
-    public boolean check이메일(){
+    // 2. 이메일 중복 체크
+    public boolean duplicateEmailCheck(){
         MemberRepository repository = MemberApplication.getApplicationContext().getBean(MemberRepository.class); //주입받기
-        // Optional<Member> chk_mem = repository.findById(id); 
         Optional<Member> chk_email = repository.findByEmail(email); 
 
         // 이메일 중복체크
         if(chk_email.isPresent()){
+            // 가입된 이멜주소가 있다!! 
             return false;
         }
         else{ 
-            return true;
-        }
-    }
-
-
-    // 회원가입 중복체크(동호수)
-    public boolean check가입여부(){
-        MemberRepository repository = MemberApplication.getApplicationContext().getBean(MemberRepository.class); //주입받기
-        // Optional<Member> chk_mem = repository.findById(id); 
-        Optional<Member> chk_addr = repository.findByAddress(address); 
-
-
-
-        // 동호수 가입 체크
-        if(chk_addr.isPresent()){
-            return false;
-        }
-        else{ 
+            // 가입된 이멜 주소 없으니까 통과~
             return true;
         }
 
     }
- 
-	public void save(){ //회원정보 저장
+
+    // 3. 회원정보 입력
+    // 4. 회원가입
+    
+    public void joinMember(){ 
+        
+        // 가입시 기본 부여 상태 : 준회원, 이메일인증필요
+		setLevel(Level.준회원);
+		setActive(Active.이메일인증필요);
+        // 회원가입
+        save();
+
+    } 
+
+    // 5. 등록된 이메일로 인증메일 자동 발송   
+    @PostPersist
+    public void requestEmailCredential(){
+
+        EmailCertificationRequested emailCertificationRequested = new EmailCertificationRequested();
+        emailCertificationRequested.setId(getId());
+        emailCertificationRequested.setName(getName());
+        emailCertificationRequested.setAddress(getAddress());
+        emailCertificationRequested.setEmail(getEmail());
+
+        // 메일발송 ( 발송시 인증링크 전달할까함... )
+        emailCertificationRequested.publish();
+
+
+    }
+
+    // Member 저장
+	public void save(){ 
 		MemberRepository repository  = MemberApplication.getApplicationContext().getBean(MemberRepository.class);
 		repository.save(this);
 	}
+
+
+    //2차인증
+    public void publishSecondaryCredentialEnteredEvent(){
+
+        //2차인증 정보 : ID, 이름, 주소
+        SecondaryCredentialEntered secondaryCredentialEntered = new SecondaryCredentialEntered();
+        secondaryCredentialEntered.setId(getId());
+        secondaryCredentialEntered.setName(getName());
+        secondaryCredentialEntered.setAddress(getAddress());
+
+        // 2차인증 요청 -> 커뮤니티 ( 이부분은 어떻게 구현할지? ~_~ 일단킵~)
+        secondaryCredentialEntered.publish();
+    }
+
+
+
 
     public String getId() {
         return id;
@@ -169,4 +184,7 @@ public class Member {
     //         return true;
     //     }
     // }
+
+        // this.id = UUID.randomUUID().toString();
+
 }
